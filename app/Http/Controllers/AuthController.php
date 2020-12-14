@@ -30,13 +30,14 @@ class AuthController extends Controller
         if (isset($user)) {
             $user->token = Str::random(100);
             $user->save();
-            return json_encode(["token" => $user->token, "message" => $user]);
+            return $user->toJson();
         }
         return response(null, 500);
     }
 
     public function getCurrent(Request $req)
     {
-        return json_encode(['email' => 'test@mail.ru']);
+        $user = User::where('token', $req->header('token'))->first();
+        return (isset($user)) ? $user->toJson() : response(null, 403);
     }
 }
