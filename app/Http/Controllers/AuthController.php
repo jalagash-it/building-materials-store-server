@@ -40,4 +40,15 @@ class AuthController extends Controller
         $user = User::where('token', $req->header('token'))->first();
         return (isset($user)) ? $user->toJson() : response(null, 403);
     }
+
+    public function logout(Request $req)
+    {
+        $user = User::where('token', $req->header('token'))->first();
+        if (isset($user)) {
+            $user->token = null;
+            $user->save();
+        }
+        return json_encode("ok");
+    }
+
 }
